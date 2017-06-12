@@ -1,0 +1,2 @@
+[ X ] = trainingdata();
+size(x);

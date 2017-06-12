@@ -1,0 +1,23 @@
+[traindata,y]  = trainingdata();
+Xt = traindata';
+
+[m,n] = size(traindata);
+
+f = (ones(m,1).*-1);
+alpha =0.0156;
+beta = 0;
+d = 3; %polynomial degree
+
+%obtaining alpha* value from polynomial kernel function
+pk = Polykernel(alpha,beta,d,traindata,Xt);
+
+%obtaining alpha* value from dual radial basis function
+rbfk = rbfkernel(traindata,0.0521);
+Y = y.*y';
+H_pk = Y.pk ;% Finding the hessian matrix H = (yi*yj).*k(xi,x)
+H_rbfk = Y.rbfk;
+
+% finding max of the dual problem using quadprog() function
+% Dual problem equation used = min 1/2 X'HX + f'X
+alphas_pk = quadprog(H_pk,f); 
+alphas_rbfk = quadprog(H_rbfk,f);
